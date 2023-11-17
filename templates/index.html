@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function setMessage() {
+          const messageElement = document.getElementById("message");
+    
+          if (messageElement !== null) {
+            messageElement.innerHTML = '{{ message }}';
+          }
+        }
+      </script>
+    <title>Amazon API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #f21d1d;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body onload="setMessage()">
+    <div class="container">
+        <h2>Amazon API Details</h2>
+        <form action="/submit" method="post" enctype="multipart/form-data">
+
+            <div id="message"></div>
+
+            <label for="api_key">API Key:</label>
+            <input type="text" id="api_key" name="api_key" required>
+
+            <label for="api_secret">API Secret:</label>
+            <input type="password" id="secret_key" name="secret_key" required>
+
+            <label for="associate_tag">Associate Tag:</label>
+            <input type="text" id="associate_tag" name="associate_tag" required>
+
+            <label for="associate_tag">Excel Report:</label><br><br>
+            <input type="file" id="api_file" name="api_file" accept=".xlsx" required><br>
+
+            <button type="submit">Check API Details</button>
+        </form>
+    </div>
+</body>
+</html>
