@@ -2,8 +2,10 @@
 Flask==3.0.0
 Werkzeug==3.0.1
 
-# Authentication
+# Authentication & Security
 PyJWT==2.10.1
+Flask-WTF==1.2.1
+Flask-Limiter==3.5.0
 
 # Data Processing
 pandas==2.1.4
