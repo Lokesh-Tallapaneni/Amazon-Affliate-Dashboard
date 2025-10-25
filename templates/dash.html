@@ -35,10 +35,11 @@
 <body>
     <header>
         <h1>Agile Dashboard</h1>
-        <a href="{{ url_for('get_recommendations') }}" class="previous">Recommendations</a>
-        <a href="{{ url_for('chat') }}" class="previous">Chat Support</a>
-        <a href="{{ url_for('data') }}" class="previous">Click to show products as per dates</a>
-        <a onclick="logout()" href="{{url_for('index')}}" class="previous">logout</a>
+        <a href="{{ url_for('analytics.analytics_overview') }}" class="previous">Analytics</a>
+        <a href="{{ url_for('recommendations.get_recommendations') }}" class="previous">Recommendations</a>
+        <a href="{{ url_for('chat.chat_page') }}" class="previous">Chat Support</a>
+        <a href="{{ url_for('data.view_data') }}" class="previous">Data View</a>
+        <a onclick="logout()" href="{{url_for('auth.login')}}" class="previous">Logout</a>
     </header>
     <p id="trackingID"></p>
     <h2>Summary of the Report</h2>
@@ -78,8 +79,8 @@
             <p>Selected From Date: {{ from_date }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected To Date: {{ to_date }}</p>
         </form>
         <br>
-        <!-- <a href="{{ url_for('get_recommendations') }}" class="previous">Recommendations</a>
-        <a href="{{ url_for('data') }}" class="previous">Click to show products as per dates</a> -->
+        <!-- <a href="{{ url_for('recommendations.get_recommendations') }}" class="previous">Recommendations</a>
+        <a href="{{ url_for('data.view_data') }}" class="previous">Click to show products as per dates</a> -->
     </div>
     <div class="image-container">
     <img src="{{ url_for('static', filename='images/dash.png') }}" alt="Image 1">

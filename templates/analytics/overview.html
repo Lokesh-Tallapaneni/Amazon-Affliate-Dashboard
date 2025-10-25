@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Overview - Affiliate Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-links {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #764ba2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .trend-up {
+            color: #10b981;
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        .trend-stable {
+            color: #6b7280;
+        }
+
+        .analytics-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .section-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .section-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .section-card a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: opacity 0.3s;
+        }
+
+        .section-card a:hover {
+            opacity: 0.9;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+
+            .nav-links a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Analytics Overview</h1>
+            <p>Comprehensive insights into your affiliate performance</p>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('data.view_data') }}">Data</a>
+                <a href="{{ url_for('recommendations.get_recommendations') }}">Recommendations</a>
+                <a href="{{ url_for('chat.chat_page') }}">AI Chat</a>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="error">Error: {{ error }}</div>
+        {% endif %}
+
+        {% if data %}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Conversion Rate</h3>
+                <div class="stat-value">{{ data.conversion.average }}%</div>
+                <div class="stat-label">
+                    Trend: <span class="trend-{{ data.conversion.trend }}">{{ data.conversion.trend|upper }}</span>
+                </div>
+                <div class="stat-label">{{ data.conversion.total_clicks }} clicks → {{ data.conversion.total_orders }} orders</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <div class="stat-value">${{ "%.2f"|format(data.devices.total_revenue) }}</div>
+                <div class="stat-label">Across {{ data.devices.device_count }} device types</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Return Rate</h3>
+                <div class="stat-value">{{ data.returns.return_rate }}%</div>
+                <div class="stat-label">{{ data.returns.total_returns }} returns</div>
+                <div class="stat-label">Revenue lost: ${{ "%.2f"|format(data.returns.revenue_lost) }}</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Best Link Type</h3>
+                <div class="stat-value" style="font-size: 18px;">{{ data.link_types.best_performer }}</div>
+                <div class="stat-label">{{ data.link_types.link_count }} link types tracked</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="analytics-sections">
+            <div class="section-card" onclick="window.location='{{ url_for('analytics.conversion_analytics') }}'">
+                <h2>Conversion Analysis</h2>
+                <p>Track daily conversion rates, identify trends, and optimize your marketing strategies</p>
+                <a href="{{ url_for('analytics.conversion_analytics') }}">View Details</a>
+            </div>
+
+            <div class="section-card" onclick="window.location='{{ url_for('analytics.device_analytics') }}'">
+                <h2>Device Performance</h2>
+                <p>Understand how different devices contribute to your revenue and conversions</p>
+                <a href="{{ url_for('analytics.device_analytics') }}">View Details</a>
+            </div>
+
+            <div class="section-card" onclick="window.location='{{ url_for('analytics.link_type_analytics') }}'">
+                <h2>Link Type Analysis</h2>
+                <p>Compare performance across different link types to maximize ROI</p>
+                <a href="{{ url_for('analytics.link_type_analytics') }}">View Details</a>
+            </div>
+
+            <div class="section-card" onclick="window.location='{{ url_for('analytics.returns_analytics') }}'">
+                <h2>Returns Analysis</h2>
+                <p>Deep dive into return patterns, rates, and financial impact</p>
+                <a href="{{ url_for('analytics.returns_analytics') }}">View Details</a>
+            </div>
+
+            <div class="section-card" onclick="window.location='{{ url_for('analytics.seller_analytics') }}'">
+                <h2>Seller Performance</h2>
+                <p>Compare Amazon vs 3rd Party sellers and their performance metrics</p>
+                <a href="{{ url_for('analytics.seller_analytics') }}">View Details</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

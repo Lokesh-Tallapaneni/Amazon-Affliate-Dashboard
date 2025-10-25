@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Type Analysis - Affiliate Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { background: white; padding: 20px 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 30px; }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .nav-links { margin-top: 15px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .nav-links a { padding: 8px 16px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; transition: background 0.3s; }
+        .nav-links a:hover { background: #764ba2; }
+        .chart-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 30px; }
+        .chart-container h2 { color: #333; margin-bottom: 20px; }
+        .chart-container img { width: 100%; height: auto; border-radius: 5px; }
+        .link-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .link-table th, .link-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .link-table th { background: #f9fafb; font-weight: 600; color: #374151; }
+        .error { background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .best-performer { background: #d1fae5; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 22px; }
+            .nav-links { flex-direction: column; }
+            .nav-links a { text-align: center; }
+            .link-table { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Link Type Performance</h1>
+            <p>Compare performance across different affiliate link types</p>
+            <div class="nav-links">
+                <a href="{{ url_for('analytics.analytics_overview') }}">Analytics Overview</a>
+                <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+            </div>
+        </div>
+
+        {% if error %}<div class="error">Error: {{ error }}</div>{% endif %}
+
+        {% if data %}
+        {% if data.best_performer %}
+        <div class="best-performer">
+            <h3 style="color: #065f46; margin-bottom: 5px;">Top Performer</h3>
+            <p style="font-size: 20px; font-weight: bold; color: #065f46;">{{ data.best_performer }}</p>
+        </div>
+        {% endif %}
+
+        <div class="chart-container">
+            <h2>Link Type Performance Visualization</h2>
+            {% if data.chart_path %}
+            <img src="{{ url_for('static', filename='images/' + data.chart_path.split('/')[-1]) }}" alt="Link Type Chart">
+            {% endif %}
+        </div>
+
+        <div class="chart-container">
+            <h2>Link Type Performance Breakdown</h2>
+            <table class="link-table">
+                <thead>
+                    <tr>
+                        <th>Link Type</th>
+                        <th>Clicks</th>
+                        <th>Items Ordered</th>
+                        <th>Conversion %</th>
+                        <th>Revenue</th>
+                        <th>Ad Fees</th>
+                        <th>ROI %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link in data.link_types %}
+                    <tr>
+                        <td><strong>{{ link['Link Type'] }}</strong></td>
+                        <td>{{ link['Clicks']|int }}</td>
+                        <td>{{ link['Items Ordered']|int }}</td>
+                        <td>{{ "%.2f"|format(link['Conversion']) }}</td>
+                        <td>${{ "%.2f"|format(link['Ordered Revenue($)']) }}</td>
+                        <td>${{ "%.2f"|format(link['Ad Fees($)']) }}</td>
+                        <td>{{ "%.1f"|format(link['ROI']) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

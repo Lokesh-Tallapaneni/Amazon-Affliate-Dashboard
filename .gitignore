@@ -28,15 +28,36 @@ Thumbs.db
 
 # Project-specific
 api_credentials.txt
+api_credintials.txt
 cache/
 exports/
-*.csv
+.claude*
 
-# compiled files
+# Data files (user uploaded)
+data.xlsx
+data.csv
+product_details.xlsx
+
+# ML model files
+cmodel_pkl
+feature_extraction
+
+# Generated images
+static/images/*.png
+
+# Logs
+logs/
+*.log
+
+# Compiled files
 *.pyc
 
 # Ignore secrets file if present
 .env
+*.xlsx
+!docs/*.md
+# Upload folder
+uploads/
 
 # Others
 run_app.vbs
