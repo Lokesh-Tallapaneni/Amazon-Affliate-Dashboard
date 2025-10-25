@@ -1,0 +1,142 @@
+h1 {
+  text-align: center;
+  color: #333;
+}
+/* Style for the date selector */
+#date-selector,
+#category-filter,
+#tracking-id-filter,
+#returns-filter {
+  text-align: center;
+  margin-top: 20px;
+}
+#date-select,
+#category-select,
+#tracking-id-select,
+#returns-select {
+  padding: 8px;
+  font-size: 16px;
+  border-color: #ffffff;
+  background-color: #dfdfda;
+  color: #1a1717;
+  border-radius: 5px;
+}
+.dropdown-content {
+  display: none;
+  border-color: #ffffff;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: black;
+  border-color: #ffffff;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+#date-select:hover .dropdown-content {
+  display: block;
+}
+#category-select:hover .dropdown-content {
+  display: block;
+}
+#tracking-id-select:hover .dropdown-content {
+  display: block;
+}
+#returns-select:hover .dropdown-content {
+  display: block;
+}
+
+/* Style for the loading indicator */
+#loading-indicator {
+  text-align: center;
+  margin-top: 20px;
+  display: none; /* Hide it by default */
+}
+
+/* Style for the product table */
+#product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#product-table th,
+#product-table td {
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: left;
+}
+
+#product-table th {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Style for the pagination control */
+#pagination-control {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* CSS for the alert box */
+.alert {
+  display: none;
+  background-color: #f44336;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.previous {
+  margin-top: 30px;
+  padding: 15px;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  width: auto;
+  background-color: #ffffff;
+  color: #080710;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  border-color: none;
+  cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.previous:hover {
+  opacity: 0.85;
+  transition: all 150ms linear;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+  background-color: hsl(0, 0%, 100%);
+}
+
+.previous:active {
+  /* Click animation styles (active state triggered on mouse down) */
+  transform: scale(0.95);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.previous:focus {
+  outline: 1px dotted #959595;
+  outline-offset: -4px;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Box</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='chat.css') }}"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  </head>
+  <body>
+    <p>Support Chat</p>
+    <div class="chat-container">
+      <div id="chat-window">
+        <div id="chat-output"></div>
+      </div>
+      <div id="user-input">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Type your message..."
+          onkeydown="sendMessageOnEnter(event)"
+        />
+        <button id="send-button" onclick="sendMessage()" disabled>
+          <span class="button__text">Send</span>
+          <span class="button-loading-icon"></span>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      var messageSent = false; // Track whether a message has been sent
+
+      function sendMessageOnEnter(event) {
+        if (event.key === "Enter" && !messageSent) {
+          sendMessage();
+          event.preventDefault(); // Prevent form submission on Enter key
+        }
+      }
+
+      function sendMessage() {
+        var messageInput = document.getElementById("message-input");
+        var chatOutput = document.getElementById("chat-output");
+        var sendButton = document.getElementById("send-button");
+
+        var userMessage = messageInput.value;
+        if (userMessage.trim() === "") {
+          return;
+        }
+
+        // Append user's message to the chat window
+        chatOutput.innerHTML +=
+          '<div class="user-message"><strong>You:</strong> ' +
+          userMessage +
+          "</div>";
+
+        // Show loading animation on send button
+        sendButton.classList.add("loading");
+        sendButton.disabled = true; // Disable button
+        messageSent = true; // Set messageSent to true
+
+        // Send the user's message to the server (Flask) for processing
+        $.ajax({
+          type: "POST",
+          url: "/send_message",
+          data: { user_message: userMessage },
+          success: function (response) {
+            // Find the last user message and remove the 'no-animation' class
+            var lastUserMessage = chatOutput.querySelector(
+              ".user-message.no-animation"
+            );
+            if (lastUserMessage) {
+              lastUserMessage.classList.remove("no-animation");
+            }
+            console.log(response);
+            console.log(response.model_response);
+
+            // Split the model response by newline character and wrap each line in a div
+            var modelResponseLines = response.model_response.split("\n");
+            var modelResponseHTML = "";
+            for (var i = 0; i < modelResponseLines.length; i++) {
+              modelResponseHTML += "<div>" + modelResponseLines[i] + "</div>";
+            }
+
+            // Append model's response to the chat window
+            chatOutput.innerHTML +=
+              '<div class="model-message"><strong>Model:</strong>' +
+              modelResponseHTML +
+              "</div>";
+
+            // Clear the message input
+            messageInput.value = "";
+
+            // Remove loading animation from send button
+            sendButton.classList.remove("loading");
+            sendButton.disabled = false; // Enable button
+            messageSent = false;
+
+            // Scroll to the bottom of the chat window
+            chatOutput.scrollTop = chatOutput.scrollHeight;
+          },
+          error: function () {
+            // Remove loading animation from send button if there's an error
+            sendButton.classList.remove("loading");
+            sendButton.disabled = false; // Enable button
+            messageSent = false; // Reset messageSent to false
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

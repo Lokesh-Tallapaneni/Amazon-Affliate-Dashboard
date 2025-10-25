@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agile Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* CSS for the error message */
+        .error-message {
+            color: #f00;
+        }
+    </style>
+    <script>
+                window.addEventListener('beforeunload', function(event) {
+            // Check if the target URL is outside the current domain
+            if (!event.currentTarget.location.href.startsWith(window.location.origin)) {
+                // Send logout request to server
+                fetch("/logout", { method: "POST" });
+            }
+        });
+        function logout() {
+         fetch("/logout", { method: "POST" });   
+        }
+        function changeImage(type) {
+            var imageContainer = document.getElementById("imageContainer");
+            if (type === "pie") {
+                imageContainer.src = "{{ url_for('static', filename='images/piepic.png') }}";
+            } else if (type === "bar") {
+                imageContainer.src = "{{ url_for('static', filename='images/barpic.png') }}";
+            } else if (type === "returns") {
+                imageContainer.src = "{{ url_for('static', filename='images/returns.png') }}";
+            }
+        }
+    </script>    
+</head>
+<body>
+    <header>
+        <h1>Agile Dashboard</h1>
+        <a href="{{ url_for('get_recommendations') }}" class="previous">Recommendations</a>
+        <a href="{{ url_for('chat') }}" class="previous">Chat Support</a>
+        <a href="{{ url_for('data') }}" class="previous">Click to show products as per dates</a>
+        <a onclick="logout()" href="{{url_for('index')}}" class="previous">logout</a>
+    </header>
+    <p id="trackingID"></p>
+    <h2>Summary of the Report</h2>
+    <table class="sm">
+        <thead>
+            <tr>
+                <th>Tracking ID</th>
+                <th>Clicks</th>
+                <th>Items Ordered</th>
+                <th>Items Shipped</th>
+                <th>Revenue</th>
+                <th>Ad Fees</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for det in sm %}
+            <tr>
+                <td>{{ det['Tracking ID'] }}</td>
+                <td>{{ det['Clicks'] }}</td>
+                <td>{{ det['Items Ordered'] }}</td>
+                <td>{{ det['Items Shipped'] }}</td>
+                <td>{{ det['Revenue($)'] }}₹</td>
+                <td>{{ det['Ad Fees($)'] }}₹</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="date-selector">
+        <form action="" method="post">
+            <p>Uploaded Report Date is from {{ start_date }} to {{ end_date }}</p>
+            <label for="from_date">From Date:</label>
+            <input type="date" id="from_date" name="from_date" min="{{ start_date }}" max="{{ end_date}}" required>
+            <label for="to_date">To Date:</label>
+            <input type="date" id="to_date" name="to_date" min="{{ start_date }}" max="{{ end_date}}" required>
+            <input class="previous" type="submit" value="Submit" onclick="return validateDateRange();"><br></br>
+            <p class="error-message" id="date-error"></p>
+            <p>Selected From Date: {{ from_date }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected To Date: {{ to_date }}</p>
+        </form>
+        <br>
+        <!-- <a href="{{ url_for('get_recommendations') }}" class="previous">Recommendations</a>
+        <a href="{{ url_for('data') }}" class="previous">Click to show products as per dates</a> -->
+    </div>
+    <div class="image-container">
+    <img src="{{ url_for('static', filename='images/dash.png') }}" alt="Image 1">
+    </div>
+    <h1>Category</h1><br>
+    <div class="dropdown">
+        <button class="dropbtn">Select type of visualization</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="changeImage('pie')">Pie Chart</a>
+            <a href="#" onclick="changeImage('bar')">Bar Chart</a>
+            <a href="#" onclick="changeImage('returns')">Returns Chart</a>
+        </div>
+    </div>
+
+    <div class="image-container">
+        <img src="{{ url_for('static', filename='images/piepic.png') }}" alt="Default Image" id="imageContainer">
+    </div>
+    <br>
+    <p> Top 10 Ad Fees Products</p>
+    <table id="product-table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Items Shipped</th>
+                <th>Date Shipped</th>
+                <th>Returns</th>
+                <th>Ad Fees</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in mx_fee %}
+            <tr>
+                <td>{{ product['Category'] }}</td>
+                <td data-asin="{{ product['ASIN'] }}" data-tracking="{{ product['Tracking ID'] }}">{{ product['Name'] }}</td>
+                <td>{{ product['Price'] }}₹</td>
+                <td>{{ product['Items Shipped'] }}</td>
+                <td>{{ product['Date Shipped'] }}</td>
+                <td>{{ product['Returns'] }}</td>
+                <td>{{ product['Ad Fees'] }}₹</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <p>Maximum Quantity Products</p>
+    <table id="product-table-2">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Date Shipped</th>
+                <!-- <th>Ad Fees</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for product1 in mx_quan %}
+            <tr>
+                <td>{{ product1['Category'] }}</td>
+                <td data-asin="{{ product1['ASIN'] }}" data-tracking="{{ product1['Tag'] }}">{{ product1['Name'] }}</td>
+                <td>{{ product1['Price($)'] }}₹</td>
+                <td>{{ product1['Qty'] }}</td>
+                <td>{{ product1['Date'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        function validateDateRange() {
+            const fromInput = document.getElementById("from_date");
+            const toInput = document.getElementById("to_date");
+            const fromDate = new Date(fromInput.value);
+            const toDate = new Date(toInput.value);
+
+            if (fromDate >= toDate) {
+                // Display an error message
+                const errorElement = document.getElementById("date-error");
+                errorElement.textContent = "From Date should be earlier than To Date.";
+                return false;
+            } else {
+                // Clear any previous error message
+                const errorElement = document.getElementById("date-error");
+                errorElement.textContent = "";
+                return true;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const fromInput = document.getElementById("from_date");
+            const toInput = document.getElementById("to_date");
+            fromInput.addEventListener("change", function () {
+                // Format the "from_date" input value as "YYYY-MM-DD"
+                formatInputDate(fromInput);
+            });
+
+            toInput.addEventListener("change", function () {
+                // Format the "to_date" input value as "YYYY-MM-DD"
+                formatInputDate(toInput);
+            });
+
+            function formatInputDate(inputElement) {
+                const enteredDate = inputElement.value;
+                const dateObj = new Date(enteredDate);
+                if (!isNaN(dateObj.getTime())) {
+                    const formattedDate = dateObj.toISOString().split('T')[0];
+                    inputElement.value = formattedDate;
+                }
+            }
+
+            function createAmazonURL(asinNumber, trackingId) {
+                if (asinNumber && trackingId) {
+                    return "http://www.amazon.in/dp/" + asinNumber + "?tag=" + trackingId;
+                }
+            }
+
+            // Add click event listeners to product names
+            tbody.addEventListener("click", function (event) {
+                const target = event.target;
+                if (target.nodeName === "TD" && target.cellIndex === 1) {
+                    // Check if the clicked cell is the product name cell (index 1)
+                    const asinNumber = target.dataset.asin; // Get ASIN from a custom data attribute
+                    const trackingId = target.dataset.tracking; // Get Tracking ID from a custom data attribute
+                    if (asinNumber) {
+                        const amazonURL = createAmazonURL(asinNumber, trackingId);
+                        if (amazonURL) {
+                            window.open(amazonURL, "_blank"); // Open the URL in a new tab
+                        }
+                    }
+                }
+            });
+        });
+
+        const productTable = document.getElementById("product-table");
+        const tbody = productTable.getElementsByTagName("tbody")[0];
+        const data = {{mx_fee | safe}};
+
+        // Add click event listeners to product names in the second table
+        const productTable2 = document.getElementById("product-table-2");
+        const tbody2 = productTable2.getElementsByTagName("tbody")[0];
+        productTable2.addEventListener("click", function (event) {
+            const target = event.target;
+            if (target.nodeName === "TD" && target.cellIndex === 1) {
+                // Check if the clicked cell is the product name cell (index 1)
+                const asinNumber = target.dataset.asin; // Get ASIN from a custom data attribute
+                const trackingId = target.dataset.tracking; // Get Tracking ID from a custom data attribute
+                function createAmazonURL(asinNumber, trackingId) {
+                    if (asinNumber && trackingId) {
+                        return "http://www.amazon.in/dp/" + asinNumber + "?tag=" + trackingId;
+                    }
+                }
+                if (asinNumber) {
+                    const amazonURL = createAmazonURL(asinNumber, trackingId);
+                    if (amazonURL) {
+                        window.open(amazonURL, "_blank"); // Open the URL in a new tab
+                    }
+                }
+            }
+        });
+        const sm={{ sm | safe }};
+        const firstTrackingID = sm[0];
+        // Display the first tracking ID on the page
+        document.getElementById('trackingID').textContent = "Store Id: "+firstTrackingID["Tracking ID"];
+    </script>
+</body>
+</html>

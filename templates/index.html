@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      function setMessage() {
+        const messageElement = document.getElementById("message");
+
+        if (messageElement !== null) {
+          messageElement.innerHTML = "{{ message }}";
+        }
+      }
+      window.onbeforeunload = function () {
+        // Send logout request to server
+        fetch("/logout", { method: "POST" });
+      };
+    </script>
+    <title>Amazon API Test</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *:before,
+      *:after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #080710;
+        font-family: "Poppins", sans-serif;
+      }
+      .message {
+        /* padding: 10px; */
+        /* margin-bottom: 10px; */
+        /* border: 1px solid #ccc; */
+        border-radius: 5px;
+        /* background-color: #fff; */
+        color: #f21d1d;
+      }
+      .background {
+        width: 430px;
+        height: 520px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+      }
+      .background .shape {
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        border-radius: 50%;
+      }
+      .shape:first-child {
+        background: linear-gradient(#1845ad, #23a2f6);
+        left: -80px;
+        top: -80px;
+      }
+      .shape:last-child {
+        background: linear-gradient(to right, #ff512f, #f09819);
+        right: -30px;
+        bottom: -80px;
+      }
+      form {
+        height: 520px;
+        width: 400px;
+        background-color: rgba(255, 255, 255, 0.13);
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+        padding: 50px 35px;
+      }
+      form * {
+        color: #ffffff;
+        letter-spacing: 0.5px;
+        outline: none;
+        border: none;
+      }
+      form h3 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 42px;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      label {
+        display: block;
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      input {
+        display: block;
+        height: 40px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.07);
+        border-radius: 3px;
+        padding: 0 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 300;
+        color: #ffffff;
+      }
+      ::placeholder {
+        color: #e5e5e5;
+      }
+      button {
+        margin-top: 30px;
+        width: 100%;
+        background-color: #ffffff;
+        color: #080710;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease-in-out;
+      }
+      button:hover {
+        /* Hover animation styles */
+        opacity: 0.85;
+        transition: all 150ms linear;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+      }
+      button:active {
+        /* Click animation styles (active state triggered on mouse down) */
+        transform: scale(0.95);
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      button:focus {
+        outline: 1px dotted #959595;
+        outline-offset: -4px;
+      }
+      input[type="file"]::file-selector-button {
+        border-radius: 4px;
+        padding: 0 16px;
+        height: 40px;
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+        margin-right: 16px;
+        transition: background-color 200ms;
+      }
+
+      /* file upload button hover state */
+      input[type="file"]::file-selector-button:hover {
+        background-color: #f3f4f6;
+      }
+
+      /* file upload button active state */
+      input[type="file"]::file-selector-button:active {
+        background-color: #e5e7eb;
+      }
+    </style>
+  </head>
+  <body onload="setMessage()">
+    <div class="background">
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+    <form action="/submit" method="post" enctype="multipart/form-data">
+      <h3>Affiliate Details</h3>
+      <div id="message" class="message"></div>
+      <label for="api_key">API Key:</label>
+      <input
+        type="text"
+        id="api_key"
+        name="api_key"
+        placeholder="Enter API Key"
+        required
+      />
+      <label for="api_secret">API Secret:</label>
+      <input
+        type="password"
+        id="secret_key"
+        name="secret_key"
+        placeholder="Enter API Secret"
+        required
+      />
+      <label for="associate_tag">Associate Tag:</label>
+      <input
+        type="text"
+        id="associate_tag"
+        name="associate_tag"
+        placeholder="Enter Associate Tag"
+        required
+      />
+      <label for="associate_tag">Excel Report:</label>
+      <input
+        type="file"
+        id="api_file"
+        name="api_file"
+        accept=".xlsx"
+        required
+      /><br />
+      <button type="submit">Check API Details</button>
+    </form>
+  </body>
+</html>

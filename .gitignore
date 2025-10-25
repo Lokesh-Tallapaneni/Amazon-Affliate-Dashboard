@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual envs
+venv/
+env/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Logs and databases
+*.log
+*.sqlite3
+*.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Project-specific
+api_credentials.txt
+cache/
+exports/
+*.csv
+
+# compiled files
+*.pyc
+
+# Ignore secrets file if present
+.env
+
+# Others
+run_app.vbs
+
+# Keep local static/test generated files out
+cache/
+static/uploads/
