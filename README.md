@@ -2,9 +2,6 @@
 
 A production-ready Flask application for analyzing Amazon affiliate performance with advanced analytics, ML-based recommendations, and AI-powered chat interface.
 
-**Version:** 2.0.0 (with Analytics)
-**Status:** ✅ Production Ready
-**Test Coverage:** 18/18 Tests Passing
 
 ---
 
@@ -95,15 +92,6 @@ Good/
 │   └── analytics/           # NEW - 6 analytics templates
 ├── static/
 │   └── images/              # Generated charts
-├── tests/                   # Test suite
-│   ├── test_analytics.py    # NEW - Analytics tests (9/9)
-│   ├── test_end_to_end.py   # E2E tests (6/6)
-│   └── test_routes.py       # Route tests (9/9)
-├── docs/                    # Documentation
-│   ├── ENHANCEMENT_PLAN.md  # Analytics roadmap
-│   ├── IMPLEMENTATION_SUMMARY.md # Detailed summary
-│   ├── PRODUCTION_DEPLOYMENT.md # Deployment guide
-│   └── ... (10 more docs)
 ├── config.py                # Configuration
 ├── run.py                   # Application entry point
 └── requirements.txt         # Dependencies
@@ -111,24 +99,6 @@ Good/
 
 ---
 
-## Testing
-
-### Run All Tests
-
-```bash
-# Analytics tests (9/9)
-./venv/Scripts/python.exe tests/test_analytics.py
-
-# End-to-end tests (6/6)
-./venv/Scripts/python.exe tests/test_end_to_end.py
-
-# Route tests (9/9)
-./venv/Scripts/python.exe tests/test_routes.py
-```
-
-**Total:** 18/18 tests passing ✅
-
----
 
 ## Analytics Features
 
@@ -190,22 +160,6 @@ Compare Amazon vs 3rd Party seller performance.
 **Route:** `/analytics/overview`
 
 Unified dashboard with quick stats from all categories.
-
----
-
-## Documentation
-
-Comprehensive documentation available in `docs/` folder:
-
-- **[QUICKSTART.md](docs/QUICKSTART.md)** - Quick start guide
-- **[PRODUCTION_DEPLOYMENT.md](docs/PRODUCTION_DEPLOYMENT.md)** - Production deployment guide
-- **[TESTING_AND_BUGFIXES.md](docs/TESTING_AND_BUGFIXES.md)** - Testing and bug fixes
-- **[ENHANCEMENT_PLAN.md](docs/ENHANCEMENT_PLAN.md)** - Analytics roadmap
-- **[IMPLEMENTATION_SUMMARY.md](docs/IMPLEMENTATION_SUMMARY.md)** - Detailed implementation summary
-- **[MIGRATION.md](docs/MIGRATION.md)** - Migration guide
-- **[REFACTORING_SUMMARY.md](docs/REFACTORING_SUMMARY.md)** - Refactoring details
-- **[CHECKLIST.md](docs/CHECKLIST.md)** - Deployment checklist
-- **[INDEX.md](docs/INDEX.md)** - Documentation index
 
 ---
 
@@ -335,34 +289,8 @@ mkdir -p static/images
 
 ---
 
-## Contributing
-
-1. Create feature branch
-2. Write tests for new features
-3. Run all tests (18/18 should pass)
-4. Update documentation
-5. Submit pull request
-
----
-
 ## License
 
 Proprietary - All rights reserved
 
 ---
-
-## Support
-
-For issues, questions, or feature requests:
-1. Check documentation in `docs/` folder
-2. Review test cases in `tests/` folder
-3. Contact development team
-
----
-
-## Credits
-
-**Development:** Claude Code Assistant
-**Version:** 2.0.0 (Enhanced with Analytics)
-**Date:** October 25, 2025
-**Status:** ✅ Production Ready
