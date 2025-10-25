@@ -1,37 +1,78 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Agile Dashboard - Recommendations</title>
+    <title>Product Recommendations - Amazon Affiliate Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link
       rel="stylesheet"
       type="text/css"
       href="{{ url_for('static', filename='style.css') }}"
     />
     <script>
-      window.addEventListener("beforeunload", function (event) {
-        // Check if the target URL is outside the current domain
-        if (
-          !event.currentTarget.location.href.startsWith(window.location.origin)
-        ) {
-          // Send logout request to server
-          fetch("/logout", { method: "POST" });
+      async function handleLogout() {
+        try {
+          const response = await fetch('/logout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            window.location.href = '/login';
+          } else {
+            console.error('Logout failed');
+            window.location.href = '/login';
+          }
+        } catch (error) {
+          console.error('Logout error:', error);
+          window.location.href = '/login';
         }
-      });
-      function logout() {
-        fetch("/logout", { method: "POST" });
       }
     </script>
+    <style>
+      .recommendations-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+        flex-wrap: wrap;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .recommendations-header {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .header-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h2>Product Recommendations</h2>
-    <div style="display: flex; justify-content: end">
-      <a
-        style="align-items: end"
-        onclick="logout()"
-        href="{{url_for('auth.login')}}"
-        class="previous"
-        >logout</a
-      >
+    <div class="recommendations-header">
+      <div>
+        <h2 style="margin: 0;">ML-Recommended Products</h2>
+        <p style="margin: 5px 0 0; color: #666;">Products predicted to have low return rates</p>
+      </div>
+      <div class="header-actions">
+        <a href="{{url_for('dashboard.dashboard')}}" class="previous">
+          ← Back to Dashboard
+        </a>
+        <a onclick="handleLogout()" class="previous" style="cursor: pointer;">
+          Logout
+        </a>
+      </div>
     </div>
     {% set shuffled_products = products|shuffle %}
     <div class="product-container">
@@ -42,9 +83,9 @@
           alt="{{ product['Title'] }}"
         />
         <h3>{{ product['Product_Name'] }}</h3>
-        <p>Price: {{ product['Current_Price'] }}₹</p>
+        <p>Price: ${{ product['Current_Price'] }}</p>
         <p class="strikethrough-text">
-          Original Price: {{ product['Original_Price'] }}₹
+          Original Price: ${{ product['Original_Price'] }}
         </p>
         <a href="{{ product['Product_Link'] }}" target="_blank">View Product</a>
       </div>
